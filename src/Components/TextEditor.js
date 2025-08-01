@@ -1,6 +1,8 @@
 import { useFormState } from 'react-dom';
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
+import FileImporter from './FileImporter' // Make sure this file exists
+
 // export default function TextEditor(props)
 export default function TextEditor({ showAlert }) {
 
@@ -20,10 +22,11 @@ export default function TextEditor({ showAlert }) {
     // const handleSave = () =>{
     // showAlert({ type: "success", msg :"Document saved!"})
     // }
+
     const [text, setText] = useState('Enter Text Here');
     const [mode, setMode] = useState('light'); //weather darkmode is available or not
 
-
+    // const [editorContent, setEditorContent] = useState(''); // <-- removed to avoid conflict
 
     const HandleUpClick = () => {
         console.log("Uppercase was Clicked" + text);
@@ -48,7 +51,6 @@ export default function TextEditor({ showAlert }) {
     const HandleOnChange = (event) => {
         console.log("on Change");
         setText(event.target.value)
-
     }
 
     // text = "new text" - Wrong way to change the state
@@ -60,29 +62,36 @@ export default function TextEditor({ showAlert }) {
                 <div className="container">
                     {/* <h1>{props.heading}</h1> */}
                     <h2> Text Editor </h2>
+
+                    {/* File Importer */}
+                     <FileImporter onImport={(text) => setText(text)} />
+
                     <div className="mb-3">
                         {/* <label Htmlfor="Textarea1" className="form-label">Example textarea</label> */}
-                        <textarea className="form-control" style={{backgroundColor:'lightgrey', color : 'black' }}  value={text} onChange={HandleOnChange} id="Textarea1" rows="8"></textarea>
+                        <textarea
+                            className="form-control"
+                            style={{ backgroundColor: 'lightgrey', color: 'black' }}
+                            value={text}
+                            onChange={HandleOnChange}
+                            placeholder="Start typing..."
+                            id="Textarea1"
+                            rows="8"
+                        ></textarea>
                     </div>
-                    <button className="btn btn-primary mx-3" onClick={HandleUpClick} showAlert={showAlert} >Convert to UpperCase</button>
-                    <button className="btn btn-primary mx-3" onClick={HandleLoClick} >Convert to LowerCase</button>
-                    <button className="btn btn-primary mx-3" onClick={HandleCaClick} >Convert to CapitalCase</button>
+                    <button className="btn btn-primary mx-3 my-1" onClick={HandleUpClick} showAlert={showAlert} >Convert to UpperCase</button>
+                    <button className="btn btn-primary mx-3 my-1" onClick={HandleLoClick} >Convert to LowerCase</button>
+                    <button className="btn btn-primary mx-3 my-1" onClick={HandleCaClick} >Convert to CapitalCase</button>
                     {/* <button className="btn btn-primary mx-3" onClick={handleSave} >Convert to save</button> */}
 
                 </div>
             </div>
             <div className="container my-3">
                 <h1> Text Summary </h1>
-                <p>{text.split(" ").length} words and {text.length} Characters</p>
+                <p>{text.split(" ").filter((element) => { return element.length !== 0 }).length} words and {text.length} Characters</p>
                 <h2> Preview </h2>
                 <p> {text}</p>
 
             </div>
-
-
         </>
-
-
-
     )
 }

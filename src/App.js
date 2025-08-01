@@ -8,8 +8,11 @@ import Contact from './Components/Contact';
 import Resume from './Components/Resume';
 import TextEditor from './Components/TextEditor';
 import Alert from './Components/Alert';
+import FileImporter from './Components/FileImporter';
+
 
 function App() {
+  const [editorContent, setEditorContent] = useState('');
   const [mode, setMode] = useState('light'); // Global dark mode state
   const [alert, setAlert] = useState(null);
 
@@ -40,7 +43,8 @@ function App() {
     <Router>
       <Navbar title="Fury" mode={mode} toggleMode={toggleMode} />
       <Alert alert={alert} />
-
+      {/* <FileImporter onImport={(text) => setEditorContent(text)} /> */}
+      {/* <FileImporter onImport={(text) => console.log("Imported text:", text)} /> */}
       <Routes>
         <Route exact path="/" element={<Homepage />} />
         <Route exact path="/Resume" element={<Resume />} />
