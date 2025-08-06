@@ -48,6 +48,14 @@ export default function TextEditor({ showAlert }) {
         showAlert("success", "Converted to Capitalize!");
 
     }
+    const HandleCtClick = ()=> {
+        console.log("Clear Text was Clicked" + text);
+        let newtext = "";
+        setText(newtext);
+        showAlert("success","Cleared Text")
+
+    } 
+
     const HandleOnChange = (event) => {
         console.log("on Change");
         setText(event.target.value)
@@ -78,9 +86,10 @@ export default function TextEditor({ showAlert }) {
                             rows="8"
                         ></textarea>
                     </div>
-                    <button className="btn btn-primary mx-3 my-1" onClick={HandleUpClick} showAlert={showAlert} >Convert to UpperCase</button>
+                    <button className="btn btn-primary mx-3 my-1" onClick={HandleUpClick} >Convert to UpperCase</button>
                     <button className="btn btn-primary mx-3 my-1" onClick={HandleLoClick} >Convert to LowerCase</button>
                     <button className="btn btn-primary mx-3 my-1" onClick={HandleCaClick} >Convert to CapitalCase</button>
+                    <button className="btn btn-primary mx-3 my-1" onClick={HandleCtClick} >Clear Text</button>
                     {/* <button className="btn btn-primary mx-3" onClick={handleSave} >Convert to save</button> */}
 
                 </div>

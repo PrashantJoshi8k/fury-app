@@ -22,9 +22,7 @@ export default function Navbar(props) {
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item"><Link className="nav-link active" to="/">Home</Link></li>
             <li className="nav-item"><Link className="nav-link active" to="/TextEditor">TextEditor</Link></li>
-            <li className="nav-item"><Link className="nav-link active" to="/shop">Shop</Link></li>
-            <li className="nav-item"><Link className="nav-link active" to="/about">{props.AboutUs}</Link></li>
-
+            <li className="nav-item"><Link className="nav-link active" to="/SpenTrackr">SpenTrackr</Link></li>
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Categories
@@ -45,6 +43,7 @@ export default function Navbar(props) {
                 <i style={{ marginTop: 11.2 }} className="fas fa-shopping-cart active"></i> Cart
               </Link>
             </li>
+            <li className="nav-item"><Link className="nav-link active" to="/about">{props.AboutUs}</Link></li>
           </ul>
 
           {/* ✅ Modern switch (only one, clean and working) */}

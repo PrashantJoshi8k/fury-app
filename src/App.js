@@ -8,6 +8,7 @@ import Contact from './Components/Contact';
 import Resume from './Components/Resume';
 import TextEditor from './Components/TextEditor';
 import Alert from './Components/Alert';
+import SpenTrackr from './Components/SpenTrackr';
 import FileImporter from './Components/FileImporter';
 
 
@@ -50,6 +51,7 @@ function App() {
         <Route exact path="/Resume" element={<Resume />} />
         <Route exact path="/TextEditor" element={<TextEditor showAlert={showAlert} heading="TextBx" />} />
         <Route exact path="/Contact" element={<Contact />} />
+        <Route exact path="/SpenTrackr" element={<SpenTrackr />} />
       </Routes>
     </Router>
   );
