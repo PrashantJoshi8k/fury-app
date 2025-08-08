@@ -3,40 +3,61 @@ import React from 'react'
 
 export default function Resume() {
 
-
     const maincontainer = {
         display: 'flex',
         width: '100%',
-        height: '100vh', //full screeh height optional
+        // height: '100vh', // full screen height optional
+        alignItems: 'stretch', // ← this ensures columns are same height
+        position: 'relative', // needed for absolute divider inside column1
     };
+
     const column1 = {
         flex: '1',
         padding: '20px',
-        boxSizing: 'border-box', //full screeh height optional
+        boxSizing: 'border-box', // full screeh height optional
+        position: 'relative', // ← needed for absolute vertical line
+        // borderRight: '2px solid #ccc',
+        // height: '100%', // ← not needed when using alignItems: stretch
     };
+
     const column2 = {
         flex: '2',
         padding: '20px',
-        boxSizing: 'border-box', //full screeh height optional
+        boxSizing: 'border-box', // full screeh height optional
+        // height: '100%', // not needed when using alignItems: stretch
+        paddingLeft: '30px', // give space after vertical line
+        // borderLeft: '2px solid #ccc', // replaced with custom line
     };
 
-
-
-
     return (
-
-
-        <div className="resume-container max-w-4xl mx-3 p-6 bg-white shadow-md rounded-md">
-            <div className='flex' style={{display:'flex', JustifyContent:'space-between', alignItems: 'end'}}>
-            <h1 className="text-3xl font-bold mb-6">Resume</h1>
-            <a href="/resume.pdf" download="YourName_Resume.pdf" className="inline-block mt-4 px-4 py-2 bg-blue-600 text-black rounded hover:bg-blue-700 transition " style={{position:'absolute', right:0 , top:'8px' , alignItems: 'end'}} >
-                Download Resume (PDF)
-            </a>
-
+        <div className="resume-container max-w-4xl mx-3 p-6 shadow-md rounded-md">
+            <div className='flex' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                <h1 className="text-3xl font-bold mb-6">Resume</h1>
+                <a
+                    href="/resume.pdf"
+                    download="YourName_Resume.pdf"
+                    className="inline-block mt-4 px-4 py-2 bg-blue-600 rounded hover:bg-blue-700 transition"
+                    style={{ top: '8px' }}
+                >
+                    Download Resume (PDF)
+                </a>
             </div>
+            <hr />
 
             <div style={maincontainer}>
                 <div style={column1}>
+                    {/* Vertical divider */}
+                    <div
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            right: 0,
+                            width: '2px',
+                            height: '100%',
+                            backgroundColor: '#ccc',
+                        }}
+                    />
+
                     {/* Contact */}
                     <section>
                         <h2 className="text-2xl font-semibold border-b pb-1 mb-3">Contact</h2>
@@ -45,7 +66,7 @@ export default function Resume() {
                         <p>LinkedIn: <a href="https://linkedin.com/in/xxxxxxxxx" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">linkedin.com/in/xxxxxxxxx</a></p>
                     </section>
 
-                    <section className="mb-6">
+                    <section className="">
                         <h2 className="text-2xl font-semibold border-b pb-1 mb-3">Education</h2>
                         <ul className="list-disc list-inside ml-4">
                             <li>
@@ -53,15 +74,16 @@ export default function Resume() {
                                 Mumbai University <br />
                                 GPA: 7.38
                             </li>
-                            <li className="mt-3">
+                            <li className="">
                                 <strong>Masters of Management Studies in Marketing</strong> (2019 – 2021) <br />
                                 VIVA Institute of Management & Research, Mumbai University <br />
                                 GPA: 8.07
                             </li>
                         </ul>
                     </section>
+
                     {/* Skills */}
-                    <section className="mb-6">
+                    <section className="">
                         <h2 className="text-2xl font-semibold border-b pb-1 mb-3">Skills</h2>
 
                         <h3 className="font-semibold mt-2">Hard Skills</h3>
@@ -84,14 +106,16 @@ export default function Resume() {
                         </ul>
                     </section>
                 </div>
-                <div style={column2}>
+
+                <div className="vertical-divider" style={column2}>
                     {/* Career Objective */}
-                    <section className="mb-6">
+                    <section className="">
                         <h2 className="text-2xl font-semibold border-b pb-1 mb-3">Career Objective</h2>
                         <p>
                             Passionate about design and creative communication, with hands-on experience in crafting visual content using Photoshop, Blender, and modern AI tools. Skilled in producing marketing materials, display ads, and client-support documents such as quotations. Experienced in client documentation including proposal and tax invoices. Eager to contribute to a dynamic team and grow in a fast-paced, design-driven environment.
                         </p>
                     </section>
+
                     {/* Summary */}
                     {/* <section className="mb-6">
                         <h2 className="text-2xl font-semibold border-b pb-1 mb-3">Summary</h2>
@@ -99,7 +123,7 @@ export default function Resume() {
                     </section> */}
 
                     {/* Summer Internship Project */}
-                    <section className="mb-6">
+                    <section className="">
                         <h2 className="text-2xl font-semibold border-b pb-1 mb-3">Summer Internship Project</h2>
                         <h3 className="font-semibold">Project Title:</h3>
                         <p>A Study on Marketing Strategies of Amazon</p>
@@ -111,7 +135,7 @@ export default function Resume() {
                     </section>
 
                     {/* Experience */}
-                    <section className="mb-6">
+                    <section className="">
                         <h2 className="text-2xl font-semibold border-b pb-1 mb-3">Experience</h2>
                         <p><strong>Administrative Coordinator & Marketing Executive</strong></p>
                         <p>PKJ Electronics Security Systems & Services</p>
@@ -125,7 +149,7 @@ export default function Resume() {
                     </section>
 
                     {/* Certifications */}
-                    <section className="mb-6">
+                    <section className="">
                         <h2 className="text-2xl font-semibold border-b pb-1 mb-3">Certifications</h2>
                         <ul className="list-disc list-inside ml-4">
                             <li>Google Digital Garage | The Fundamentals of Digital Marketing</li>
@@ -134,14 +158,9 @@ export default function Resume() {
                         </ul>
                     </section>
 
-
                     {/* Projects */}
-
                 </div>
-
             </div>
-
         </div>
-
     )
 }

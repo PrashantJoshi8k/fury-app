@@ -62,3 +62,57 @@ body.dark-mode {
   color: #ffffff;
 }
 
+/* ✅ Mobile drawer styles */
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  right: -250px;
+  width: 250px;
+  height: 100%;
+  background: #444;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1rem;
+  transition: right 0.3s ease;
+  z-index: 1100;
+}
+
+.mobile-drawer.open {
+  right: 0;
+}
+
+.mobile-drawer a {
+  color: white;
+  text-decoration: none;
+  margin: 1rem 0;
+  font-size: 1.1rem;
+}
+
+.close-btn {
+  align-self: flex-end;
+  font-size: 2rem;
+  background: none;
+  border: none;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+}
+
+/* ✅ Hide drawer trigger on large screens */
+@media (min-width: 992px) {
+  .mobile-drawer,
+  .backdrop {
+    display: none;
+  }
+
+  .navbar-toggler.d-lg-none {
+    display: none;
+  }
+}

@@ -24,7 +24,7 @@ const initialCategories = [
   'Custom',
 ];
 
-export default function SpenTrackr() {
+export default function SpendTrackr() {
   // All hooks must be here inside the component
   const [salary, setSalary] = useState(() => loadFromStorage('salary', 0));
   const [balance, setBalance] = useState(() => loadFromStorage('balance', 0));
@@ -102,7 +102,7 @@ export default function SpenTrackr() {
   return (
     <div className="container p-4">
       <div className="d-flex justify-content-between align-items-center">
-        <h2>SpenTrackr</h2>
+        <h2>SpendTrackr</h2>
         <p><strong>Date:</strong> {new Date().toLocaleDateString('en-IN')}</p>
       </div>
       <hr />
