@@ -1,17 +1,28 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import './Homepage.css'
+
+
 function Homepage(props) {
+  const linkStyle = {
+    color: 'white',
+    padding: '10px 20px',
+    border: 'none',
+    borderRadius: '5px',
+  };
 
   let myStyle = {
     // color: props.mode === 'dark' ? 'white' : 'black',
     // backgroundColor: props.mode === 'dark' ? 'white' : 'null',
-
-  }
+  };
 
   return (
     <div className='mx-4'>
-      {/* <h1>Homepage</h1> */}
+
+      {/* ---------------------------- OLD CODE (COMMENTED OUT) ----------------------------- */}
+
+      {/*
       <div>
         <p>Hi, I'm Fury — a Frontend Developer who builds functional and responsive web applications.</p>
 
@@ -25,18 +36,61 @@ function Homepage(props) {
       <li>Get in touch with me ? here is my <Link to="/contact">Contact Page</Link>.</li>
       <hr></hr>
       <div className='flex'>
-        <h2>🚀 Projects I’ve Built</h2>
-        <ul>📝 TextEditor</ul><p>A clean and lightweight text editing tool with formatting features, ideal for writers and developers.</p>
-        <ul>💰 SpendTrackr</ul><p>A personal finance app to help users track daily expenses and stay on budget.</p>
+        <h2 className='text-decoration-underline'>🚀 Projects I’ve Built</h2>
+        <h3><ul><Link to="/TextEditor" className="text-decoration-none">📝 TextEditor</Link></ul></h3><p>A clean and lightweight text editing tool with formatting features, ideal for writers and developers.</p>
+        <h3><ul><Link to="/TextEditor" className="text-decoration-none">💰 SpendTrackr </Link></ul></h3><p>A personal finance app to help users track daily expenses and stay on budget.</p>
+      </div>
+      */}
 
+      {/* ---------------------------- NEW CLEANED-UP STRUCTURE ----------------------------- */}
 
+      {/* ✅ Hero Section */}
+      <h1 className="hero-heading">Hi, I'm Fury 👋</h1>
+      <p className="hero-subtext">
+        A frontend developer who builds functional and responsive web applications.
+      </p>
+
+      {/* ✅ About Me Section */}
+      <h2 className="section-heading">About Me</h2>
+      <p className="section-text">
+        I specialize in React, JavaScript, and clean UI design. Passionate about turning ideas into interactive, user-friendly web apps.
+      </p>
+
+      {/* ✅ Resume & Contact */}
+      <div className="cta-buttons">
+        <a href="/resume.pdf" download="YourName_Resume.pdf" className="btn">
+          📄 Download Resume
+        </a>
+        <Link to="/contact" className="btn btn-secondary">
+          📬 Contact Me
+        </Link>
       </div>
 
+      {/* ✅ Projects Section */}
+      <h2 className="section-heading">🚀 Projects I’ve Built</h2>
+      <div className="project-grid">
+        {/* Project 1 */}
+        <div className="project-card">
+          <h3>
+            <Link to="/TextEditor" className="text-decoration-none">📝 TextEditor</Link>
+          </h3>
+          <p>
+            A clean and lightweight text editing tool with formatting features, ideal for writers and developers.
+          </p>
+        </div>
 
-
+        {/* Project 2 */}
+        <div className="project-card">
+          <h3>
+            <Link to="/SpendTrackr" className="text-decoration-none">💰 SpendTrackr</Link>
+          </h3>
+          <p>
+            A personal finance app to help users track daily expenses and stay on budget.
+          </p>
+        </div>
+      </div>
     </div>
-    
-    
-  )
+  );
 }
+
 export default Homepage;

@@ -30,8 +30,8 @@ export default function Navbar(props) {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item"><Link className="nav-link active" to="/">Home</Link></li>
-            <li className="nav-item"><Link className="nav-link active" to="/TextEditor">TextEditor</Link></li>
-            <li className="nav-item"><Link className="nav-link active" to="/SpendTrackr">SpendTrackr</Link></li>
+            <li className="nav-item"><Link className="nav-link active" to="/TextEditor">📝TextEditor</Link></li>
+            <li className="nav-item"><Link className="nav-link active" to="/SpendTrackr">💰SpendTrackr</Link></li>
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Categories
