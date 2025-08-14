@@ -3,6 +3,66 @@
   font-weight: bold;
   margin-top: 20px;
 }
+.home {
+  background-color: #0F172A; /* Dark Navy */
+  color: #F1F5F9;           /* Light Gray */
+  /* min-height: 100vh; */
+  /* padding: 40px; */
+  /* font-family: 'Inter', sans-serif; */
+}
+
+
+
+/* Fixed background section */
+.featured-image {
+  height: 70vh;
+  /* width: clamp(300px, 80vw, 800px); */
+  background-image: url('/public/images/feature-image.jpg'); /* Place in /public/images */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  color: #0F172A;
+  font-size: 3rem;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+  overflow: hidden; /* to contain SVG */
+}
+
+@media (max-width: 768px) {
+  .featured-image {
+    width: 100%;
+    height: 70vh;
+    background-attachment: scroll; /* Fix background fixed bug on mobile */
+    font-size: 2rem;
+  }
+}
+
+/* Optional text on the image */
+.featured-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 4rem;
+  color: white;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Content that scrolls over */
+.page-content {
+  background-color: white;
+  padding: 100px 20px;
+  position: relative;
+  z-index: 2;
+ /* margin-top: -50px; slight overlap */
+  margin-top: -80px; /* lift content over wave */
+}
+
+body.dark-mode .featured-image {
+  color: #0F172A; /* solid dark gray */
+}
+
 
 .hero-subtext {
   font-size: 1.2rem;
@@ -59,7 +119,7 @@
 
 .project-card {
   flex: 1 1 300px;
-  background: #f8f9fa;
+  /* background: #f8f9fa; */
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -73,3 +133,15 @@
 .text-decoration-none:hover {
   text-decoration: underline;
 }
+
+/* Position the wave SVG at the bottom */
+.wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  display: block;
+  z-index: 2;
+}
+

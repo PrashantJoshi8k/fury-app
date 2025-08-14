@@ -116,3 +116,12 @@ body.dark-mode {
     display: none;
   }
 }
+
+
+
+/* Hide Bootstrap's collapse nav on mobile */
+@media (max-width: 991.98px) {
+  #navbarSupportedContent {
+    display: none !important;
+  }
+}
