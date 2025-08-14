@@ -34,10 +34,17 @@
 
 @media (max-width: 768px) {
   .featured-image {
-    width: 100%;
-    height: 70vh;
-    background-attachment: scroll; /* Fix background fixed bug on mobile */
-    font-size: 2rem;
+    height: 400px;              /* smaller height for mobile */
+    max-width: 100%;             /* shrink image width on smaller devices */
+    background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+    font-size: 1.8rem;          /* smaller text on mobile */
   }
 }
 
