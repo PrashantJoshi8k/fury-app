@@ -23,7 +23,7 @@ export default function TextEditor({ showAlert }) {
     // showAlert({ type: "success", msg :"Document saved!"})
     // }
 
-    const [text, setText] = useState('Enter Text Here');
+    const [text, setText] = useState('');
     const [mode, setMode] = useState('light'); //weather darkmode is available or not
 
     // const [editorContent, setEditorContent] = useState(''); // <-- removed to avoid conflict

@@ -124,7 +124,7 @@ export default function SpendTrackr() {
           <div className="d-flex justify-content-between align-items-center">
             <h5>
               Available Balance:
-              <span className="text-success mx-2">₹{balance.toLocaleString('en-IN')}/-</span>
+              <span style={{ color: '#07ff07ff' }} className="mx-2">₹{balance.toLocaleString('en-IN')}/-</span>
             </h5>
             <button onClick={handleEditSalary} className="btn btn-outline-secondary btn-sm">Edit Salary</button>
           </div>
@@ -133,8 +133,8 @@ export default function SpendTrackr() {
 
       {/* Page Toggle */}
       <div className="mb-3">
-        <button onClick={() => setActivePage('Expenses')} className={`btn me-2 ${activePage === 'Expenses' ? 'btn-primary' : 'btn-outline-primary'}`}>Expenses</button>
-        <button onClick={() => setActivePage('Savings')} className={`btn ${activePage === 'Savings' ? 'btn-success' : 'btn-outline-success'}`}>Savings</button>
+        <button onClick={() => setActivePage('Expenses')} className={`btn me-2 ${activePage === 'Expenses' ? 'btn-primary' : 'btn-outline-primary'} mx-1`}>Expenses</button>
+        <button onClick={() => setActivePage('Savings')} className={`btn ${activePage === 'Savings' ? 'btn-success' : 'btn-outline-success'} mx-1`}>Savings</button>
       </div>
 
       {/* Expenses Page */}
@@ -145,7 +145,7 @@ export default function SpendTrackr() {
               <button
                 key={type}
                 onClick={() => setExpenseFilter(type)}
-                className={`btn ${expenseFilter === type ? 'btn-dark' : 'btn-outline-dark'}`}
+                className={`btn ${expenseFilter === type ? 'btn-dark' : 'btn-outline-dark'} mx-1`}
               >
                 {type}
               </button>
@@ -214,7 +214,7 @@ export default function SpendTrackr() {
               ))}
             </ul>
           ) : (
-            <p className="text-muted">No expenses for this filter.</p>
+            <p className="text-muted">No Records.</p>
           )}
         </div>
       )}
