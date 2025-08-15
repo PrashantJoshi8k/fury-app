@@ -4,6 +4,16 @@
   align-items: center;
   padding: 10px 20px;
   background-color: var(--navbar-bg);
+  flex-grow: 1;
+  display: flex;
+}
+.navbar.custom-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.collapse.navbar-collapse {
+  display: flex !important;
 }
 
 /* Switch Container */
@@ -79,7 +89,7 @@ body.dark-mode {
 }
 
 .mobile-drawer.open {
-  right: 0;
+  left: 0;
 }
 
 .mobile-drawer a {

@@ -10,6 +10,7 @@ import TextEditor from './Components/TextEditor';
 import Alert from './Components/Alert';
 import SpendTrackr from './Components/SpendTrackr';
 import FileImporter from './Components/FileImporter';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function App() {

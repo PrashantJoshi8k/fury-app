@@ -13,14 +13,10 @@ export default function Navbar(props) {
   const closeDrawer = () => setDrawerOpen(false);
 
   return (
-    <nav
-      className={`navbar navbar-expand-lg navbar-${props.mode} bg-${props.mode}`}
-    >
+    
+      <nav className={`navbar custom-navbar navbar-expand-lg navbar-${props.mode} bg-${props.mode}`}>
+  
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
-          {props.title}
-        </Link>
-
         {/* ✅ Mobile hamburger button (only visible on small screens)
         <button className="navbar-toggler d-lg-none" onClick={toggleDrawer}>
           ☰
@@ -36,8 +32,14 @@ export default function Navbar(props) {
           <span className="navbar-toggler-icon"></span>
         </button>
 
+        <Link className="navbar-brand" to="/">
+          {props.title}
+        </Link>
+
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+
+          {/* ✅ All nav items aligned to the right using ms-auto */}
+          <ul className="navbar-nav ms-auto mb-2 mb-lg-0" style={{ marginLeft: 'auto' }}>
             <li className="nav-item">
               <Link className="nav-link active" to="/">
                 Home
@@ -88,7 +90,6 @@ export default function Navbar(props) {
                 </li>
               </ul>
             </li>
-
             <li className="nav-item">
               <Link className="nav-link active" to="/contact">
                 Contact
@@ -132,7 +133,6 @@ export default function Navbar(props) {
         </div>
 
         {/* ✅ Mobile drawer menu */}
-        
         {/* Mobile toggle + drawer button — only for small screens */}
         <div className="mobile-toggle-drawer d-lg-none">
           <div className="switch" onClick={props.toggleMode}>
@@ -143,32 +143,19 @@ export default function Navbar(props) {
                 className="switch-icon"
               />
             </div>
+
             <div className={`mobile-drawer ${drawerOpen ? "open" : ""}`}>
-          <button className="close-btn" onClick={closeDrawer}>
-            ×
-          </button>
-          <Link to="/" onClick={closeDrawer}>
-            Home
-          </Link>
-          <Link to="/TextEditor" onClick={closeDrawer}>
-            TextEditor
-          </Link>
-          <Link to="/SpendTrackr" onClick={closeDrawer}>
-            SpendTrackr
-          </Link>
-          <Link to="/contact" onClick={closeDrawer}>
-            Contact
-          </Link>
-          <Link to="/resume" onClick={closeDrawer}>
-            Resume
-          </Link>
-          <Link to="/cart" onClick={closeDrawer}>
-            Cart
-          </Link>
-          <Link to="/about" onClick={closeDrawer}>
-            {props.AboutUs}
-          </Link>
-        </div>
+              <button className="close-btn" onClick={closeDrawer}>
+                ×
+              </button>
+              <Link to="/" onClick={closeDrawer}>Home</Link>
+              <Link to="/TextEditor" onClick={closeDrawer}>TextEditor</Link>
+              <Link to="/SpendTrackr" onClick={closeDrawer}>SpendTrackr</Link>
+              <Link to="/contact" onClick={closeDrawer}>Contact</Link>
+              <Link to="/resume" onClick={closeDrawer}>Resume</Link>
+              <Link to="/cart" onClick={closeDrawer}>Cart</Link>
+              <Link to="/about" onClick={closeDrawer}>{props.AboutUs}</Link>
+            </div>
           </div>
 
           {/* <button

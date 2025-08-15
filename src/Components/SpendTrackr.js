@@ -133,8 +133,9 @@ export default function SpendTrackr() {
 
       {/* Page Toggle */}
       <div className="mb-3">
-        <button onClick={() => setActivePage('Expenses')} className={`btn me-2 ${activePage === 'Expenses' ? 'btn-primary' : 'btn-outline-primary'} mx-1`}>Expenses</button>
-        <button onClick={() => setActivePage('Savings')} className={`btn ${activePage === 'Savings' ? 'btn-success' : 'btn-outline-success'} mx-1`}>Savings</button>
+        <button onClick={() => setActivePage('Expenses')} className={`btn me-2 ${activePage === 'Expenses' ? 'btn-danger' : 'btn btn-danger'} mx-1`}>Expenses</button>
+        <button onClick={() => setActivePage('Savings')} className={`btn ${activePage === 'Savings' ? 'btn-success' : 'btn-success'} mx-1 `}>Savings</button>
+        
       </div>
 
       {/* Expenses Page */}
