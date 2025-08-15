@@ -21,9 +21,12 @@ function Homepage(props) {
 
 
     <div className='home' >
-      <div className="featured-image " style={{
+      <div className="featured-image" >
+      <div  style={{
         backgroundImage: `url(${process.env.PUBLIC_URL + '/images/feature-image.jpg'})`,
       }}>
+
+      </div>
         <h1 className="featured-text">Welcome</h1>
         {/* SVG wave at the bottom */}
         <svg
@@ -77,7 +80,7 @@ function Homepage(props) {
 
       {/* ✅ Resume & Contact */}
       <div className="cta-buttons">
-        <a href="/resume.pdf" download="YourName_Resume.pdf" className="btn btn-primary">
+        <a href="/resume.pdf" download="YourName_Resume.pdf" className="btn">
           📄 Download Resume
         </a>
         <Link to="/contact" className="btn btn-secondary">
