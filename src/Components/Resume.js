@@ -3,31 +3,34 @@ import React from 'react'
 
 export default function Resume() {
 
-    const maincontainer = {
-        display: 'flex',
-        width: '100%',
-        // height: '100vh', // full screen height optional
-        alignItems: 'stretch', // ← this ensures columns are same height
-        position: 'relative', // needed for absolute divider inside column1
-    };
+    const isMobile = window.innerWidth <= 768; // ✅ Detect mobile screen width
 
-    const column1 = {
-        flex: '1',
-        padding: '20px',
-        boxSizing: 'border-box', // full screeh height optional
-        position: 'relative', // ← needed for absolute vertical line
-        // borderRight: '2px solid #ccc',
-        // height: '100%', // ← not needed when using alignItems: stretch
-    };
+  const maincontainer = {
+    display: 'flex',
+    flexWrap: 'wrap',                // ✅ Allow columns to stack on mobile
+    width: '100%',
+    alignItems: 'stretch',           // ✅ Ensure equal height columns
+    position: 'relative',            // ✅ Needed for absolute vertical divider
+  };
 
-    const column2 = {
-        flex: '2',
-        padding: '20px',
-        boxSizing: 'border-box', // full screeh height optional
-        // height: '100%', // not needed when using alignItems: stretch
-        paddingLeft: '30px', // give space after vertical line
-        // borderLeft: '2px solid #ccc', // replaced with custom line
-    };
+  const column1 = {
+    flex: isMobile ? '100%' : '1',   // ✅ Full width on mobile
+    width: isMobile ? '100%' : 'auto',
+    padding: '20px',
+    boxSizing: 'border-box',
+    position: 'relative',
+    // height: '100%',               // ❌ Not needed
+  };
+
+  const column2 = {
+    flex: isMobile ? '100%' : '2',   // ✅ Full width on mobile
+    width: isMobile ? '100%' : 'auto',
+    padding: '20px',
+    boxSizing: 'border-box',
+    paddingLeft: isMobile ? '20px' : '30px', // ✅ Less padding on mobile
+    // height: '100%',              // ❌ Not needed
+    // borderLeft: '2px solid #ccc', // ❌ Replaced with custom divider
+  };
 
     return (
         <div className="resume-container max-w-4xl mx-3 p-6 shadow-md rounded-md">
@@ -35,7 +38,7 @@ export default function Resume() {
                 <h1 className="text-3xl font-bold mb-6">Resume</h1>
                 <a
                     href="/resume.pdf"
-                    download="YourName_Resume.pdf"
+                    download="Prashant Resume.pdf"
                     className="inline-block mt-4 px-4 py-2 bg-blue-600 rounded hover:bg-blue-700 transition"
                     style={{ top: '8px' }}
                 >
@@ -47,6 +50,7 @@ export default function Resume() {
             <div style={maincontainer}>
                 <div style={column1}>
                     {/* Vertical divider */}
+                    
                     <div
                         style={{
                             position: 'absolute',
