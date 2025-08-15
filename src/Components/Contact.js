@@ -42,7 +42,7 @@ else{
     return (
         <>
 
-            <div className="container" style={darkmode}>
+            <div className="container" > {/*style={darkmode} was added for div darkmode test*/}
                 <h1>Contact Us</h1>
                 <p>We’d love to hear from you! Reach out using the info below or the contact form.</p>
 
@@ -53,7 +53,7 @@ else{
                     <p><strong>Email:</strong> <a href="mailto:info@example.com">info@example.com</a></p>
                     <p><strong>Hours:</strong> Mon–Fri, 9 AM – 6 PM</p>
                 </div>
-                <button onClick={toggleStyle} type="button" className="btn btn-primary my-3">{btntext}</button>
+                {/* <button onClick={toggleStyle} type="button" className="btn btn-primary my-3">{btntext}</button> */}
 
             </div>
 

@@ -77,7 +77,7 @@ function Homepage(props) {
 
       {/* ✅ Resume & Contact */}
       <div className="cta-buttons">
-        <a href="/resume.pdf" download="YourName_Resume.pdf" className="btn">
+        <a href="/resume.pdf" download="YourName_Resume.pdf" className="btn btn-primary">
           📄 Download Resume
         </a>
         <Link to="/contact" className="btn btn-secondary">

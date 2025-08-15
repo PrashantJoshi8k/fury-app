@@ -13,9 +13,9 @@ export default function Navbar(props) {
   const closeDrawer = () => setDrawerOpen(false);
 
   return (
-    
-      <nav className={`navbar custom-navbar navbar-expand-lg navbar-${props.mode} bg-${props.mode}`}>
-  
+    <nav
+      className={`navbar custom-navbar navbar-expand-lg navbar-${props.mode} bg-${props.mode}`}
+    >
       <div className="container-fluid">
         {/* ✅ Mobile hamburger button (only visible on small screens)
         <button className="navbar-toggler d-lg-none" onClick={toggleDrawer}>
@@ -29,17 +29,22 @@ export default function Navbar(props) {
           onClick={toggleDrawer}
           aria-label="Toggle navigation"
         >
-          <span className="navbar-toggler-icon"></span>
+          {" "}
+          <span className="navbar-toggler-icon"></span>{" "}
         </button>
 
         <Link className="navbar-brand" to="/">
+          {" "}
           {props.title}
         </Link>
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-
+          
           {/* ✅ All nav items aligned to the right using ms-auto */}
-          <ul className="navbar-nav ms-auto mb-2 mb-lg-0" style={{ marginLeft: 'auto' }}>
+          <ul
+            className="navbar-nav ms- mb-l g-0"
+            style={{ marginLeft: "auto" }}
+          >
             <li className="nav-item">
               <Link className="nav-link active" to="/">
                 Home
@@ -64,6 +69,7 @@ export default function Navbar(props) {
               >
                 Categories
               </a>
+
               <ul className="dropdown-menu">
                 <li>
                   <Link className="dropdown-item" to="/">
@@ -126,39 +132,89 @@ export default function Navbar(props) {
               />
             </div>
           </div>
+          {/* <div className="mobile-toggle-drawer d-lg-none"> */}
+          {/* ✅ Dark Mode Toggle - isolated click handler */}
+          {/* <div className="switch">
+              <div
+                className={`switch-handle ${isDark ? "dark" : "light"}`}
+                onClick={props.toggleMode}
+              >
+                <img
+                  src={isDark ? moonIcon : sunIcon}
+                  alt="mode icon"
+                  className="switch-icon"
+                />
+              </div>
+            </div> */}
 
-          {/* ❌ Removed: duplicate switch block and local dkMode state
-              ❌ Removed: useEffect modifying document.body
-              ❌ Removed: incorrect onClick={props.toggleMode, toggleDkMode} */}
+          {/* </div> */}
         </div>
+        {/* ✅ Mobile Drawer */}
+        {/* <div className={`mobile-drawer ${drawerOpen ? "open" : ""}`}>
+          <button className="close-btn" onClick={closeDrawer}>×</button>
+          <Link to="/" onClick={closeDrawer}>Home</Link>
+          <Link to="/TextEditor" onClick={closeDrawer}>TextEditor</Link>
+          <Link to="/SpendTrackr" onClick={closeDrawer}>SpendTrackr</Link>
+          <Link to="/contact" onClick={closeDrawer}>Contact</Link>
+          <Link to="/resume" onClick={closeDrawer}>Resume</Link>
+          <Link to="/cart" onClick={closeDrawer}>Cart</Link>
+          <Link to="/about" onClick={closeDrawer}>{props.AboutUs}</Link>
+        </div> */}
 
         {/* ✅ Mobile drawer menu */}
         {/* Mobile toggle + drawer button — only for small screens */}
+
         <div className="mobile-toggle-drawer d-lg-none">
           <div className="switch" onClick={props.toggleMode}>
-            <div className={`switch-handle ${isDark ? "dark" : "light"}`}>
+            <div
+              className={`switch-handle ${isDark ? "dark" : "light"}`}
+              onClick={props.toggleMode}
+            >
               <img
                 src={isDark ? moonIcon : sunIcon}
                 alt="mode icon"
                 className="switch-icon"
               />
-            </div>
+            </div></div></div>
+        {/* <div className="switch" onClick={props.toggleMode}> */}
+        {/* <div className={`switch-handle ${isDark ? "dark" : "light"}`}>
+              <img
+                src={isDark ? moonIcon : sunIcon}
+                alt="mode icon"
+                className="switch-icon"
+              />
+            </div> */}
 
-            <div className={`mobile-drawer ${drawerOpen ? "open" : ""}`}>
-              <button className="close-btn" onClick={closeDrawer}>
-                ×
-              </button>
-              <Link to="/" onClick={closeDrawer}>Home</Link>
-              <Link to="/TextEditor" onClick={closeDrawer}>TextEditor</Link>
-              <Link to="/SpendTrackr" onClick={closeDrawer}>SpendTrackr</Link>
-              <Link to="/contact" onClick={closeDrawer}>Contact</Link>
-              <Link to="/resume" onClick={closeDrawer}>Resume</Link>
-              <Link to="/cart" onClick={closeDrawer}>Cart</Link>
-              <Link to="/about" onClick={closeDrawer}>{props.AboutUs}</Link>
-            </div>
-          </div>
+        <div className={`mobile-drawer ${drawerOpen ? "open" : ""}`}>
+          <button className="close-btn" onClick={closeDrawer}>
+            ×
+          </button>
+          <Link to="/" onClick={closeDrawer}>
+            Home
+          </Link>
+          <Link to="/TextEditor" onClick={closeDrawer}>
+            TextEditor
+          </Link>
+          <Link to="/SpendTrackr" onClick={closeDrawer}>
+            SpendTrackr
+          </Link>
+          <Link to="/contact" onClick={closeDrawer}>
+            Contact
+          </Link>
+          <Link to="/resume" onClick={closeDrawer}>
+            Resume
+          </Link>
+          <Link to="/cart" onClick={closeDrawer}>
+            Cart
+          </Link>
+          <Link to="/about" onClick={closeDrawer}>
+            {props.AboutUs}
+          </Link>
+        </div>
+      </div>
 
-          {/* <button
+
+      {/* <button
             className="navbar-toggler"
             type="button"
             onClick={toggleDrawer}
@@ -166,12 +222,13 @@ export default function Navbar(props) {
           >
             <span className="navbar-toggler-icon"></span>
           </button> */}
-        </div>
 
-        {/* ✅ Backdrop for drawer */}
-        {drawerOpen && <div className="backdrop" onClick={closeDrawer}></div>}
-      </div>
-    </nav>
+      
+
+      {/* ✅ Backdrop for drawer */}
+      {drawerOpen && <div className="backdrop" onClick={closeDrawer}></div>}
+    
+    </nav >
   );
 }
 

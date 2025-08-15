@@ -23,19 +23,50 @@ function App() {
     setTimeout(() => setAlert(null), 2000);
   };
 
-  const toggleMode = () => {
-    if (mode === 'light') {
-      setMode('dark');
-      showAlert('success', 'Dark Mode has been Enabled');
-      document.title = "Bliz - Darkmode";
-      setInterval(() => { document.title = "Bliz - Amazing" }, 2000);
-    } else {
-      setMode('light');
-      showAlert('success', 'Light Mode has been Enabled');
-      document.title = "Bliz - Lightmode";
-      setInterval(() => { document.title = "Bliz - wonderful" }, 1500);
-    }
-  };
+  // const toggleMode = () => {
+  //   if (mode === 'light') {
+  //     setMode('dark');
+  //     showAlert('success', 'Dark Mode has been Enabled');
+  //     document.title = "Bliz - Darkmode";
+  //     setInterval(() => { document.title = "Bliz - Amazing" }, 2000);
+  //   } else {
+  //     setMode('light');
+  //     showAlert('success', 'Light Mode has been Enabled');
+  //     document.title = "Bliz - Lightmode";
+  //     setInterval(() => { document.title = "Bliz - wonderful" }, 1500);
+  //   }
+  // };
+
+const toggleMode = () => {
+  if (mode === 'light') {
+    console.log("darkmode klisx")
+    setMode('dark');
+    showAlert('success', 'Dark Mode has been Enabled');
+  } else {console.log("Lightmode klisx")
+    setMode('light');
+    showAlert('success', 'Light Mode has been Enabled');
+  }
+};
+
+useEffect(() => {
+  let isOriginal = true;
+  let interval;
+
+  if (mode === 'dark') {
+    interval = setInterval(() => {
+      document.title = isOriginal ? "Bliz - Darkmode" : "Bliz - Amazing";
+      isOriginal = !isOriginal;
+    }, 2000);
+  } else {
+    interval = setInterval(() => {
+      document.title = isOriginal ? "Bliz - Lightmode" : "Bliz - Wonderful";
+      isOriginal = !isOriginal;
+    }, 2000);
+  }
+
+  return () => clearInterval(interval); // Clean up on mode change
+}, [mode]);
+
 
   useEffect(() => {
     document.body.className = mode === 'dark' ? 'dark-mode' : 'light-mode';
