@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/fury-app/static/css/main.10563c71.css",
-    "main.js": "/fury-app/static/js/main.1561b8d7.js",
+    "main.js": "/fury-app/static/js/main.0e15aece.js",
     "static/js/453.ed3810f9.chunk.js": "/fury-app/static/js/453.ed3810f9.chunk.js",
     "static/media/feature-image.jpg": "/fury-app/static/media/feature-image.930d7946152075c92685.jpg",
     "index.html": "/fury-app/index.html",
     "main.10563c71.css.map": "/fury-app/static/css/main.10563c71.css.map",
-    "main.1561b8d7.js.map": "/fury-app/static/js/main.1561b8d7.js.map",
+    "main.0e15aece.js.map": "/fury-app/static/js/main.0e15aece.js.map",
     "453.ed3810f9.chunk.js.map": "/fury-app/static/js/453.ed3810f9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.10563c71.css",
-    "static/js/main.1561b8d7.js"
+    "static/js/main.0e15aece.js"
   ]
 }
