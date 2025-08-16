@@ -5,39 +5,39 @@ export default function Resume() {
 
     const isMobile = window.innerWidth <= 768; // ✅ Detect mobile screen width
 
-  const maincontainer = {
-    display: 'flex',
-    flexWrap: 'wrap',                // ✅ Allow columns to stack on mobile
-    width: '100%',
-    alignItems: 'stretch',           // ✅ Ensure equal height columns
-    position: 'relative',            // ✅ Needed for absolute vertical divider
-  };
+    const maincontainer = {
+        display: 'flex',
+        flexWrap: 'wrap',                // ✅ Allow columns to stack on mobile
+        width: '100%',
+        alignItems: 'stretch',           // ✅ Ensure equal height columns
+        position: 'relative',            // ✅ Needed for absolute vertical divider
+    };
 
-  const column1 = {
-    flex: isMobile ? '100%' : '1',   // ✅ Full width on mobile
-    width: isMobile ? '100%' : 'auto',
-    padding: '20px',
-    boxSizing: 'border-box',
-    position: 'relative',
-    // height: '100%',               // ❌ Not needed
-  };
+    const column1 = {
+        flex: isMobile ? '100%' : '1',   // ✅ Full width on mobile
+        width: isMobile ? '100%' : 'auto',
+        padding: '20px',
+        boxSizing: 'border-box',
+        position: 'relative',
+        // height: '100%',               // ❌ Not needed
+    };
 
-  const column2 = {
-    flex: isMobile ? '100%' : '2',   // ✅ Full width on mobile
-    width: isMobile ? '100%' : 'auto',
-    padding: '20px',
-    boxSizing: 'border-box',
-    paddingLeft: isMobile ? '20px' : '30px', // ✅ Less padding on mobile
-    // height: '100%',              // ❌ Not needed
-    // borderLeft: '2px solid #ccc', // ❌ Replaced with custom divider
-  };
+    const column2 = {
+        flex: isMobile ? '100%' : '2',   // ✅ Full width on mobile
+        width: isMobile ? '100%' : 'auto',
+        padding: '20px',
+        boxSizing: 'border-box',
+        paddingLeft: isMobile ? '20px' : '30px', // ✅ Less padding on mobile
+        // height: '100%',              // ❌ Not needed
+        // borderLeft: '2px solid #ccc', // ❌ Replaced with custom divider
+    };
 
     return (
         <div className="resume-container max-w-4xl mx-3 p-6 shadow-md rounded-md">
             <div className='flex' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                 <h1 className="text-3xl font-bold mb-6">Resume</h1>
                 <a
-                    href="/resume.pdf"
+                    href={`${process.env.PUBLIC_URL}/resume.pdf`}
                     download="Prashant Resume.pdf"
                     className="inline-block mt-4 px-4 py-2 bg-blue-600 rounded hover:bg-blue-700 transition"
                     style={{ top: '8px' }}
@@ -50,7 +50,7 @@ export default function Resume() {
             <div style={maincontainer}>
                 <div style={column1}>
                     {/* Vertical divider */}
-                    
+
                     <div
                         style={{
                             position: 'absolute',
