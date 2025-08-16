@@ -9,8 +9,10 @@ import Resume from './Components/Resume';
 import TextEditor from './Components/TextEditor';
 import Alert from './Components/Alert';
 import SpendTrackr from './Components/SpendTrackr';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import FileImporter from './Components/FileImporter';
 // import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 
 function App() {
