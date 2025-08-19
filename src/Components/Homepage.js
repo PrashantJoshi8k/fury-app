@@ -23,7 +23,7 @@ function Homepage(props) {
     <div className='home' >
       <div className="featured-image" >
       <div  style={{
-        backgroundImage: `url(${process.env.PUBLIC_URL + '/images/feature-image.jpg'})`,
+        backgroundImage: `url(${process.env.PUBLIC_URL + '/images/feature-image.webp'})`,
       }}>
 
       </div>

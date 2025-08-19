@@ -17,7 +17,7 @@
 .featured-image {
   height: 70vh;
   /* width: clamp(300px, 80vw, 800px); */
-  background-image: url('/public/images/feature-image.jpg'); /* Place in /public/images */
+  background-image: url('/public/images/feature-image.webp'); /* Place in /public/images */
   background-size: cover;
   background-position: center;
   background-attachment: fixed;

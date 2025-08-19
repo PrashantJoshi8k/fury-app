@@ -35,7 +35,7 @@ export default function Resume() {
     return (
         <div className="resume-container max-w-4xl mx-3 p-6 shadow-md rounded-md">
             <div className='flex' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                <h1 className="text-3xl font-bold mb-6">Resume</h1>
+                <h1 className="text-3xl font-bold mb-6" style={{ color: '#1A1A40' }}>Resume</h1>
                 <a
                     href={`${process.env.PUBLIC_URL}/resume.pdf`}
                     download="Prashant Resume.pdf"
