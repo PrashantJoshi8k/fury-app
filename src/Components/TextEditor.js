@@ -2,10 +2,13 @@ import { useFormState } from 'react-dom';
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import FileImporter from './FileImporter' // Make sure this file exists
+import { Button } from 'bootstrap';
 
 // export default function TextEditor(props)
 export default function TextEditor({ showAlert }) {
-
+    
+    const [text, setText] = useState('');
+    const [mode, setMode] = useState('light'); //weather darkmode is available or not
 
     // const [alert, setAlert] = useState(null)
 
@@ -23,8 +26,6 @@ export default function TextEditor({ showAlert }) {
     // showAlert({ type: "success", msg :"Document saved!"})
     // }
 
-    const [text, setText] = useState('');
-    const [mode, setMode] = useState('light'); //weather darkmode is available or not
 
     // const [editorContent, setEditorContent] = useState(''); // <-- removed to avoid conflict
 
@@ -54,7 +55,24 @@ export default function TextEditor({ showAlert }) {
         setText(newtext);
         showAlert("success","Cleared Text")
 
-    } 
+    } ;
+    const HandlecopyClick = ()=>{
+
+    navigator.clipboard.writeText(text)
+        .then(()=> {
+            
+            
+            console.log("text was copyied");
+            showAlert("success","Text copyied to clipboard");
+        
+        })
+        .catch((err)=> {
+            alert("Failed to Copy!")
+            console.error("Failed to copy : "+ err);
+            showAlert("danger","Failed to copy");
+        
+        })
+    }
 
     const HandleOnChange = (event) => {
         console.log("on Change");
@@ -90,10 +108,16 @@ export default function TextEditor({ showAlert }) {
                     <button className="btn btn-primary mx-3 my-1" onClick={HandleLoClick} >Convert to LowerCase</button>
                     <button className="btn btn-primary mx-3 my-1" onClick={HandleCaClick} >Convert to CapitalCase</button>
                     <button className="btn btn-primary mx-3 my-1" onClick={HandleCtClick} >Clear Text</button>
+                    <button className="btn btn-primary mx-3 my-1" onClick={HandlecopyClick}>Copy Text</button>
                     {/* <button className="btn btn-primary mx-3" onClick={handleSave} >Convert to save</button> */}
 
                 </div>
             </div>
+             {/* {copied && (
+            <span style={{ color: "green", marginLeft: 10 }}>
+              Copied!
+            </span>
+          )} */}
             <div className="container my-3">
                 <h1> Text Summary </h1>
                 <p>{text.split(" ").filter((element) => { return element.length !== 0 }).length} words and {text.length} Characters</p>
