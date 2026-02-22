@@ -1,6 +1,9 @@
 import { useFormState } from 'react-dom';
 import React from 'react'
 
+// import Picture1 from './assets/Picture1.webp'
+
+import Picture1 from '../assets/Picture1.webp';
 export default function Resume() {
 
     const isMobile = window.innerWidth <= 768; // ✅ Detect mobile screen width
@@ -37,7 +40,7 @@ export default function Resume() {
             <div className='flex' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                 <h1 className="text-3xl font-bold mb-6" style={{ color: '#1A1A40' }}>Resume</h1>
                 <a
-                    href={`${process.env.PUBLIC_URL}/resume.pdf`}
+                    href={`${process.env.PUBLIC_URL}/Prashant Joshi Resume.pdf`}
                     download="Prashant Resume.pdf"
                     className="inline-block mt-4 px-4 py-2 bg-blue-600 rounded hover:bg-blue-700 transition"
                     style={{ top: '8px' }}
@@ -46,11 +49,13 @@ export default function Resume() {
                 </a>
             </div>
             <hr />
+                {/* <img src="/images/Picture1.webp" alt="Picture1" /> */}
 
             <div style={maincontainer}>
                 <div style={column1}>
                     {/* Vertical divider */}
 
+                <img src={Picture1} alt="Picture1"  style={{width: "150px",height: "150px",objectFit: "cover", marginLeft: "100px" }} />
                     <div
                         style={{
                             position: 'absolute',
@@ -65,9 +70,11 @@ export default function Resume() {
                     {/* Contact */}
                     <section>
                         <h2 className="text-2xl font-semibold border-b pb-1 mb-3">Contact</h2>
-                        <p>Email: abc@gmail.com</p>
-                        <p>Phone: +91 xxxxxxxxxx</p>
-                        <p>LinkedIn: <a href="https://linkedin.com/in/xxxxxxxxx" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">linkedin.com/in/xxxxxxxxx</a></p>
+                        <p>Email: prashantjoshi.8k@gmail.com</p>
+                        <p>Phone: +91 9607768658</p>
+
+                        <p>LinkedIn: <a href="https://linkedin.com/in/xxxxxxxxx" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">linkedin.com/in/prashantkumar-joshi</a></p>
+                        <p>Github: <a href="https://linkedin.com/in/xxxxxxxxx" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">github.com/prashantjoshi8k</a></p>
                     </section>
 
                     <section className="">
@@ -116,7 +123,7 @@ export default function Resume() {
                     <section className="">
                         <h2 className="text-2xl font-semibold border-b pb-1 mb-3">Career Objective</h2>
                         <p>
-                            Passionate about design and creative communication, with hands-on experience in crafting visual content using Photoshop, Blender, and modern AI tools. Skilled in producing marketing materials, display ads, and client-support documents such as quotations. Experienced in client documentation including proposal and tax invoices. Eager to contribute to a dynamic team and grow in a fast-paced, design-driven environment.
+                            Frontend Developer with hands-on experience building responsive web applications using React.js, JavaScript (ES6+), and modern CSS frameworks. Developed modular React applications with state management, routing, and localStorage persistence. Experienced in delivering business-impact solutions, including a WordPress platform that improved lead quality and increased revenue by 5–10%. Passionate about scalable architecture, performance optimization, and evolving into a full-stack developer
                         </p>
                     </section>
 
@@ -143,7 +150,7 @@ export default function Resume() {
                         <h2 className="text-2xl font-semibold border-b pb-1 mb-3">Experience</h2>
                         <p><strong>Administrative Coordinator & Marketing Executive</strong></p>
                         <p>PKJ Electronics Security Systems & Services</p>
-                        <p><em>August 2021 – Present</em></p>
+                        <p><em>August 2022 – Present</em></p>
                         <p className="mt-2"><strong>Responsibilities:</strong></p>
                         <ul className="list-disc list-inside ml-4">
                             <li>Customer communication</li>
