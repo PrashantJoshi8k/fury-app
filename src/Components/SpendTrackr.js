@@ -1,30 +1,26 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Cell,
   Pie,
   PieChart,
   Tooltip,
   Legend,
+  ResponsiveContainer,
 } from 'recharts';
 
-// ===============================
-// Local Storage Helper Functions
-// ===============================
-
-// Save data into localStorage
 const saveToStorage = (key, value) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
-// Load data from localStorage
 const loadFromStorage = (key, defaultValue) => {
-  const stored = localStorage.getItem(key);
-  return stored ? JSON.parse(stored) : defaultValue;
+  try {
+    const stored = localStorage.getItem(key);
+    return stored ? JSON.parse(stored) : defaultValue;
+  } catch {
+    return defaultValue;
+  }
 };
-
-// ===============================
-// Default Categories
-// ===============================
 
 const initialCategories = [
   'Travel',
@@ -40,10 +36,6 @@ const initialCategories = [
   'Custom',
 ];
 
-// ===============================
-// Chart Colors
-// ===============================
-
 const COLORS = [
   '#0088FE',
   '#FF8042',
@@ -58,17 +50,8 @@ const COLORS = [
 ];
 
 export default function SpendTrackr() {
-
-  // ===============================
-  // State Management
-  // ===============================
-
   const [salary, setSalary] = useState(() =>
     loadFromStorage('salary', 0)
-  );
-
-  const [balance, setBalance] = useState(() =>
-    loadFromStorage('balance', 0)
   );
 
   const [expenses, setExpenses] = useState(() =>
@@ -79,35 +62,20 @@ export default function SpendTrackr() {
     loadFromStorage('categories', initialCategories)
   );
 
-  const [isEditingSalary, setIsEditingSalary] =
-    useState(false);
+  const [budgetLimit, setBudgetLimit] = useState(() =>
+    loadFromStorage('budgetLimit', 0)
+  );
 
-  const [salaryInput, setSalaryInput] = useState('');
-
-  const [newExpense, setNewExpense] = useState({
-    category: '',
-    amount: '',
-    customName: '',
-    note: '',
-  });
+  const [darkMode, setDarkMode] = useState(false);
 
   const [activePage, setActivePage] =
     useState('Expenses');
 
-  // Used for Expense List Filter
   const [expenseFilter, setExpenseFilter] =
     useState('Today');
 
-  // ===============================
-  // NEW CHART FILTERS
-  // ===============================
-
   const [chartFilter, setChartFilter] =
     useState('Month');
-
-  // ===============================
-  // CUSTOM DATE FILTERS
-  // ===============================
 
   const [customStartDate, setCustomStartDate] =
     useState('');
@@ -115,11 +83,19 @@ export default function SpendTrackr() {
   const [customEndDate, setCustomEndDate] =
     useState('');
 
-  // ===============================
-  // EDIT STATES
-  // ===============================
+  const [searchQuery, setSearchQuery] =
+    useState('');
 
-  const [editingIndex, setEditingIndex] =
+  const [isEditingSalary, setIsEditingSalary] =
+    useState(false);
+
+  const [salaryInput, setSalaryInput] =
+    useState('');
+
+  const [budgetInput, setBudgetInput] =
+    useState('');
+
+  const [editingId, setEditingId] =
     useState(null);
 
   const [editAmount, setEditAmount] =
@@ -128,72 +104,105 @@ export default function SpendTrackr() {
   const [editNote, setEditNote] =
     useState('');
 
-  // ===============================
-  // Save States into localStorage
-  // ===============================
+  const [newExpense, setNewExpense] =
+    useState({
+      category: '',
+      amount: '',
+      customName: '',
+      note: '',
+    });
 
-  useEffect(() => saveToStorage('salary', salary), [salary]);
+  useEffect(() => {
+    saveToStorage('salary', salary);
+  }, [salary]);
 
-  useEffect(() => saveToStorage('balance', balance), [balance]);
+  useEffect(() => {
+    saveToStorage('expenses', expenses);
+  }, [expenses]);
 
-  useEffect(() => saveToStorage('expenses', expenses), [expenses]);
+  useEffect(() => {
+    saveToStorage('categories', categoryList);
+  }, [categoryList]);
 
-  useEffect(() => saveToStorage('categories', categoryList), [categoryList]);
+  useEffect(() => {
+    saveToStorage('budgetLimit', budgetLimit);
+  }, [budgetLimit]);
 
-  // ===============================
-  // Salary Functions
-  // ===============================
+  const totalExpenses = useMemo(() => {
+    return expenses.reduce(
+      (acc, item) => acc + item.amount,
+      0
+    );
+  }, [expenses]);
 
-  const handleEditSalary = () => {
-    setSalaryInput(salary === 0 ? '' : salary.toString());
-    setIsEditingSalary(true);
+  const balance = useMemo(() => {
+    return salary - totalExpenses;
+  }, [salary, totalExpenses]);
+
+  const savingsPercentage = useMemo(() => {
+    return salary > 0
+      ? ((balance / salary) * 100).toFixed(1)
+      : 0;
+  }, [salary, balance]);
+
+  const formatDate = (date) => {
+    const d = new Date(date);
+
+    return (
+      d.toLocaleDateString('en-IN') +
+      ' ' +
+      d.toLocaleTimeString('en-IN')
+    );
   };
 
   const handleSalarySave = () => {
+    const value = parseFloat(salaryInput);
 
-    const value = parseFloat(salaryInput) || 0;
+    if (isNaN(value) || value < 0) return;
 
     setSalary(value);
-
-    // Reset Balance with New Salary
-    setBalance(value);
 
     setIsEditingSalary(false);
   };
 
-  // ===============================
-  // Add Expense Function
-  // ===============================
+  const handleBudgetSave = () => {
+    const value = parseFloat(budgetInput);
 
-  const handleAddExpense = (customDate = new Date()) => {
+    if (isNaN(value) || value < 0) return;
 
-    const expenseAmount = parseFloat(newExpense.amount);
+    setBudgetLimit(value);
+  };
 
-    // If custom category selected use customName
+  const handleAddExpense = (
+    customDate = new Date()
+  ) => {
+    const expenseAmount = parseFloat(
+      newExpense.amount
+    );
+
     const category =
       newExpense.category === 'Custom'
         ? newExpense.customName.trim()
         : newExpense.category;
 
-    // Validation
-    if (!category || isNaN(expenseAmount) || expenseAmount <= 0)
+    if (
+      !category ||
+      isNaN(expenseAmount) ||
+      expenseAmount <= 0
+    ) {
       return;
+    }
 
-    // Expense Object
     const expense = {
+      id: Date.now(),
       category,
       amount: expenseAmount,
       note: newExpense.note || '',
-      time: customDate,
+      time: customDate.toISOString(),
     };
 
-    // Add expense on top
-    setExpenses([expense, ...expenses]);
+    setExpenses(prev => [expense, ...prev]);
 
-    // Reduce balance
-    setBalance(prev => prev - expenseAmount);
-
-    // Reset form
     setNewExpense({
       category: '',
       amount: '',
@@ -201,7 +210,6 @@ export default function SpendTrackr() {
       note: '',
     });
 
-    // Add custom category into category list
     if (
       newExpense.category === 'Custom' &&
       category &&
@@ -215,40 +223,26 @@ export default function SpendTrackr() {
     }
   };
 
-  // ===============================
-  // DELETE EXPENSE
-  // ===============================
-
-  const handleDeleteExpense = (expenseToDelete) => {
-
+  const handleDeleteExpense = (id) => {
     const updatedExpenses = expenses.filter(
-      exp => exp !== expenseToDelete
+      exp => exp.id !== id
     );
 
     setExpenses(updatedExpenses);
-
-    setBalance(prev => prev + expenseToDelete.amount);
   };
 
-  // ===============================
-  // EDIT EXPENSE
-  // ===============================
+  const handleEditExpense = (id) => {
+    const newAmount = parseFloat(editAmount);
 
-  const handleEditExpense = (expenseToEdit) => {
+    if (
+      isNaN(newAmount) ||
+      newAmount <= 0
+    ) {
+      return;
+    }
 
     const updatedExpenses = expenses.map(exp => {
-
-      if (exp === expenseToEdit) {
-
-        const oldAmount = exp.amount;
-
-        const newAmount = parseFloat(editAmount);
-
-        // Balance correction
-        setBalance(prev =>
-          prev + oldAmount - newAmount
-        );
-
+      if (exp.id === id) {
         return {
           ...exp,
           amount: newAmount,
@@ -261,923 +255,866 @@ export default function SpendTrackr() {
 
     setExpenses(updatedExpenses);
 
-    setEditingIndex(null);
+    setEditingId(null);
 
     setEditAmount('');
 
     setEditNote('');
   };
 
-  // ===============================
-  // Date Formatter
-  // ===============================
+  const filteredExpenses = useMemo(() => {
+    return expenses
+      .filter(exp => {
+        const now = new Date();
 
-  const formatDate = (date) => {
+        const expDate = new Date(exp.time);
 
-    return (
-      date.toLocaleDateString('en-IN') +
-      ' ' +
-      date.toLocaleTimeString('en-IN')
+        const isToday =
+          expDate.toDateString() ===
+          now.toDateString();
+
+        const yesterday = new Date();
+
+        yesterday.setDate(
+          yesterday.getDate() - 1
+        );
+
+        const isYesterday =
+          expDate.toDateString() ===
+          yesterday.toDateString();
+
+        const isFuture =
+          expDate > new Date();
+
+        const customStart = customStartDate
+          ? new Date(customStartDate)
+          : null;
+
+        const customEnd = customEndDate
+          ? new Date(customEndDate)
+          : null;
+
+        if (customEnd) {
+          customEnd.setHours(
+            23,
+            59,
+            59,
+            999
+          );
+        }
+
+        const isWithinCustomRange =
+          (!customStart ||
+            expDate >= customStart) &&
+          (!customEnd ||
+            expDate <= customEnd);
+
+        switch (expenseFilter) {
+          case 'Today':
+            return isToday;
+
+          case 'Yesterday':
+            return isYesterday;
+
+          case 'Future':
+            return isFuture;
+
+          case 'Custom':
+            return isWithinCustomRange;
+
+          default:
+            return true;
+        }
+      })
+      .filter(exp =>
+        exp.category
+          .toLowerCase()
+          .includes(
+            searchQuery.toLowerCase()
+          )
+      );
+  }, [
+    expenses,
+    expenseFilter,
+    customStartDate,
+    customEndDate,
+    searchQuery,
+  ]);
+
+  const chartExpenses = useMemo(() => {
+    return expenses.filter(exp => {
+      const expDate = new Date(exp.time);
+
+      const currentDate = new Date();
+
+      const isToday =
+        expDate.toDateString() ===
+        currentDate.toDateString();
+
+      const yesterday = new Date();
+
+      yesterday.setDate(
+        yesterday.getDate() - 1
+      );
+
+      const isYesterday =
+        expDate.toDateString() ===
+        yesterday.toDateString();
+
+      const isCurrentMonth =
+        expDate.getMonth() ===
+          currentDate.getMonth() &&
+        expDate.getFullYear() ===
+          currentDate.getFullYear();
+
+      switch (chartFilter) {
+        case 'Today':
+          return isToday;
+
+        case 'Yesterday':
+          return isYesterday;
+
+        case 'Month':
+          return isCurrentMonth;
+
+        case 'All':
+          return true;
+
+        default:
+          return true;
+      }
+    });
+  }, [expenses, chartFilter]);
+
+  const chartData = useMemo(() => {
+    const chartDataMap = {};
+
+    chartExpenses.forEach(expense => {
+      if (chartDataMap[expense.category]) {
+        chartDataMap[expense.category] +=
+          expense.amount;
+      } else {
+        chartDataMap[expense.category] =
+          expense.amount;
+      }
+    });
+
+    return Object.keys(chartDataMap).map(
+      (category, index) => ({
+        id: index + 1,
+        name: category,
+        value: chartDataMap[category],
+      })
     );
-  };
+  }, [chartExpenses]);
 
-  // ===============================
-  // Expense Filter Logic
-  // ===============================
+  const chartTotal = useMemo(() => {
+    return chartExpenses.reduce(
+      (acc, item) => acc + item.amount,
+      0
+    );
+  }, [chartExpenses]);
 
-  const filteredExpenses = expenses.filter(exp => {
-
-    const now = new Date();
-
-    const expDate = new Date(exp.time);
-
-    const isToday =
-      expDate.toDateString() === now.toDateString();
-
-    const yesterday = new Date();
-
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    const isYesterday =
-      expDate.toDateString() ===
-      yesterday.toDateString();
-
-    const isFuture = expDate > new Date();
-
-    // ===============================
-    // CUSTOM DATE FILTER
-    // ===============================
-
-    const customStart = customStartDate
-      ? new Date(customStartDate)
-      : null;
-
-    const customEnd = customEndDate
-      ? new Date(customEndDate)
-      : null;
-
-    if (customEnd) {
-      customEnd.setHours(23, 59, 59, 999);
-    }
-
-    const isWithinCustomRange =
-      customStart &&
-      customEnd &&
-      expDate >= customStart &&
-      expDate <= customEnd;
-
-    switch (expenseFilter) {
-
-      case 'Today':
-        return isToday;
-
-      case 'Yesterday':
-        return isYesterday;
-
-      case 'Future':
-        return isFuture;
-
-      case 'Custom':
-        return isWithinCustomRange;
-
-      default:
-        return true;
-    }
-  });
-
-  // ===============================
-  // Chart Filter Logic
-  // ===============================
-
-  const chartExpenses = expenses.filter(exp => {
-
-    const expDate = new Date(exp.time);
-
-    const currentDate = new Date();
-
-    const isToday =
-      expDate.toDateString() === currentDate.toDateString();
-
-    const yesterday = new Date();
-
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    const isYesterday =
-      expDate.toDateString() === yesterday.toDateString();
-
-    const isCurrentMonth =
-      expDate.getMonth() === currentDate.getMonth() &&
-      expDate.getFullYear() === currentDate.getFullYear();
-
-    switch (chartFilter) {
-
-      case 'Today':
-        return isToday;
-
-      case 'Yesterday':
-        return isYesterday;
-
-      case 'Month':
-        return isCurrentMonth;
-
-      case 'All':
-        return true;
-
-      default:
-        return true;
-    }
-  });
-
-  // ===============================
-  // Prepare Chart Data
-  // Group Expenses by Category
-  // ===============================
-
-  const chartDataMap = {};
-
-  chartExpenses.forEach((expense) => {
-
-    if (chartDataMap[expense.category]) {
-
-      chartDataMap[expense.category] += expense.amount;
-
-    } else {
-
-      chartDataMap[expense.category] = expense.amount;
-    }
-  });
-
-  // Convert Object into Array for PieChart
-
-  const chartData = Object.keys(chartDataMap).map(
-    (category, index) => ({
-      id: index + 1,
-      name: category,
-      value: chartDataMap[category],
-    })
-  );
-
-  // ===============================
-  // TOTALS
-  // ===============================
-
-  const expenseTotal = filteredExpenses.reduce(
-    (acc, item) => acc + item.amount,
-    0
-  );
-
-  const chartTotal = chartExpenses.reduce(
-    (acc, item) => acc + item.amount,
-    0
-  );
+  const theme = darkMode
+    ? {
+        background: '#0f172a',
+        card: '#1e293b',
+        text: '#ffffff',
+      }
+    : {
+        background: '#f5f7fb',
+        card: '#ffffff',
+        text: '#111827',
+      };
 
   return (
-
     <div
       className="container py-4"
       style={{
         minHeight: '100vh',
-        background: '#f5f7fb',
+        background: theme.background,
+        color: theme.text,
       }}
     >
+      <h1 className="mb-4">
+        SpendTrackr
+      </h1>
 
-      {/* =============================== */}
-      {/* Header */}
-      {/* =============================== */}
+      {/* SALARY SECTION */}
 
-      <div
-        className="d-flex justify-content-between align-items-center flex-wrap p-3 mb-4"
-        style={{
-          background: '#fff',
-          borderRadius: '18px',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.08)',
+<div
+  className="p-4 mb-4"
+  style={{
+    background: theme.card,
+    borderRadius: '18px',
+    boxShadow:
+      '0 4px 15px rgba(0,0,0,0.08)',
+  }}
+>
+  {isEditingSalary ? (
+    <>
+      <input
+        type="number"
+        value={salaryInput}
+        onChange={e =>
+          setSalaryInput(
+            e.target.value
+          )
+        }
+        onKeyDown={e => {
+          if (e.key === 'Enter') {
+            handleSalarySave();
+          }
         }}
-      >
+        className="form-control mb-3"
+        placeholder="Enter Salary"
+      />
 
-        <h2
-          style={{
-            fontWeight: '700',
-            color: '#222',
+      <button
+        className="btn btn-primary"
+        onClick={handleSalarySave}
+      >
+        Save Salary
+      </button>
+    </>
+  ) : (
+    <div className="row">
+      <div className="col-md-3">
+        <h6>Salary</h6>
+
+        <h3 className="text-primary">
+          ₹
+          {salary.toLocaleString(
+            'en-IN'
+          )}
+        </h3>
+      </div>
+
+      <div className="col-md-3">
+        <h6>Balance</h6>
+
+        <h3 className="text-success">
+          ₹
+          {balance.toLocaleString(
+            'en-IN'
+          )}
+        </h3>
+      </div>
+
+      <div className="col-md-3">
+        <h6>Savings Rate</h6>
+
+        <h3 className="text-warning">
+          {savingsPercentage}%
+        </h3>
+      </div>
+
+      <div className="col-md-3 d-flex align-items-center">
+        <button
+          className="btn btn-outline-primary"
+          onClick={() => {
+            setSalaryInput(
+              salary.toString()
+            );
+
+            setIsEditingSalary(
+              true
+            );
           }}
         >
-          SpendTrackr
-        </h2>
-
-        <p className="m-0">
-          <strong>Date:</strong>{' '}
-          {new Date().toLocaleDateString('en-IN')}
-        </p>
-
+          Edit Salary
+        </button>
       </div>
+    </div>
+  )}
+</div>
 
-      {/* =============================== */}
-      {/* Salary Section */}
-      {/* =============================== */}
+{/* BUDGET SECTION */}
 
-      <div
-        className="p-4 mb-4"
-        style={{
-          background: '#fff',
-          borderRadius: '18px',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.08)',
-        }}
+<div
+  className="p-4 mb-4"
+  style={{
+    background: theme.card,
+    borderRadius: '18px',
+  }}
+>
+  <div className="row">
+    <div className="col-md-4 mb-2">
+      <input
+        type="number"
+        className="form-control"
+        placeholder="Monthly Budget"
+        value={budgetInput}
+        onChange={e =>
+          setBudgetInput(
+            e.target.value
+          )
+        }
+      />
+    </div>
+
+    <div className="col-md-2 mb-2">
+      <button
+        className="btn btn-dark w-100"
+        onClick={handleBudgetSave}
       >
+        Save Budget
+      </button>
+    </div>
 
-        {isEditingSalary ? (
-
-          <>
-
-            <input
-              type="number"
-              value={salaryInput}
-              onChange={(e) =>
-                setSalaryInput(e.target.value)
-              }
-              className="form-control w-50 mb-3"
-              placeholder="Enter Monthly Salary"
-            />
-
-            <button
-              onClick={handleSalarySave}
-              className="btn btn-primary"
-            >
-              Save Salary
-            </button>
-
-          </>
-
-        ) : (
-
-          <div className="d-flex justify-content-between align-items-center flex-wrap">
-
-            <div>
-
-              <h5 className="mb-1">
-                Available Balance
-              </h5>
-
-              <h2
-                style={{
-                  color: '#16a34a',
-                  fontWeight: '700',
-                }}
-              >
-                ₹{balance.toLocaleString('en-IN')}
-              </h2>
-
-            </div>
-
-            <button
-              onClick={handleEditSalary}
-              className="btn btn-outline-dark"
-            >
-              Edit Salary
-            </button>
-
-          </div>
-
+    <div className="col-md-6">
+      <h5>
+        Budget Limit: ₹
+        {budgetLimit.toLocaleString(
+          'en-IN'
         )}
+      </h5>
 
-      </div>
+      {totalExpenses >
+        budgetLimit &&
+        budgetLimit > 0 && (
+          <div className="alert alert-danger mt-2">
+            Budget Limit Exceeded!
+          </div>
+        )}
+    </div>
+  </div>
+</div>
 
-      {/* =============================== */}
-      {/* Navigation */}
-      {/* =============================== */}
+{/* NAVIGATION */}
 
-      <div className="mb-4 text-center">
+<div className="mb-4 text-center">
+  {[
+    'Expenses',
+    'Charts',
+    'Savings',
+  ].map(page => (
+    <button
+      key={page}
+      onClick={() =>
+        setActivePage(page)
+      }
+      className={`btn mx-2 ${
+        activePage === page
+          ? 'btn-dark'
+          : 'btn-outline-dark'
+      }`}
+    >
+      {page}
+    </button>
+  ))}
+</div>
 
+{/* EXPENSE PAGE */}
+
+{activePage === 'Expenses' && (
+  <div
+    className="p-4"
+    style={{
+      background: theme.card,
+      borderRadius: '18px',
+    }}
+  >
+    {/* FILTERS */}
+
+    <div className="mb-4">
+      {[
+        'All',
+        'Yesterday',
+        'Today',
+        'Future',
+        'Custom',
+      ].map(type => (
         <button
-          onClick={() => setActivePage('Expenses')}
-          className={`btn mx-2 ${
-            activePage === 'Expenses'
-              ? 'btn-danger'
-              : 'btn-outline-danger'
-          }`}
-        >
-          Expenses
-        </button>
-
-        <button
-          onClick={() => setActivePage('Savings')}
-          className={`btn mx-2 ${
-            activePage === 'Savings'
-              ? 'btn-success'
-              : 'btn-outline-success'
-          }`}
-        >
-          Savings
-        </button>
-
-        <button
-          onClick={() => setActivePage('Charts')}
-          className={`btn mx-2 ${
-            activePage === 'Charts'
+          key={type}
+          onClick={() =>
+            setExpenseFilter(type)
+          }
+          className={`btn mx-1 mb-2 ${
+            expenseFilter === type
               ? 'btn-dark'
               : 'btn-outline-dark'
           }`}
         >
-          Charts
+          {type}
         </button>
+      ))}
+    </div>
 
+    {/* SEARCH */}
+
+    <div className="mb-4">
+      <input
+        type="text"
+        placeholder="Search category..."
+        className="form-control"
+        value={searchQuery}
+        onChange={e =>
+          setSearchQuery(
+            e.target.value
+          )
+        }
+      />
+    </div>
+
+    {/* CUSTOM FILTER */}
+
+    {expenseFilter === 'Custom' && (
+      <div className="row mb-4">
+        <div className="col-md-4 mb-2">
+          <input
+            type="date"
+            className="form-control"
+            value={customStartDate}
+            onChange={e =>
+              setCustomStartDate(
+                e.target.value
+              )
+            }
+          />
+        </div>
+
+        <div className="col-md-4 mb-2">
+          <input
+            type="date"
+            className="form-control"
+            value={customEndDate}
+            onChange={e =>
+              setCustomEndDate(
+                e.target.value
+              )
+            }
+          />
+        </div>
+      </div>
+    )}
+
+    {/* ADD FORM */}
+
+    <div className="row mb-4">
+      <div className="col-md-3 mb-2">
+        <select
+          className="form-select"
+          value={newExpense.category}
+          onChange={e =>
+            setNewExpense({
+              ...newExpense,
+              category:
+                e.target.value,
+            })
+          }
+        >
+          <option value="">
+            Select Category
+          </option>
+
+          {categoryList.map(
+            (cat, idx) => (
+              <option
+                key={idx}
+                value={cat}
+              >
+                {cat}
+              </option>
+            )
+          )}
+        </select>
       </div>
 
-      {/* =============================== */}
-      {/* Expenses Page */}
-      {/* =============================== */}
+      {newExpense.category ===
+        'Custom' && (
+        <div className="col-md-2 mb-2">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Custom category"
+            value={
+              newExpense.customName
+            }
+            onChange={e =>
+              setNewExpense({
+                ...newExpense,
+                customName:
+                  e.target.value,
+              })
+            }
+          />
+        </div>
+      )}
 
-      {activePage === 'Expenses' && (
+      <div className="col-md-2 mb-2">
+        <input
+          type="number"
+          className="form-control"
+          placeholder="Amount"
+          value={newExpense.amount}
+          onChange={e =>
+            setNewExpense({
+              ...newExpense,
+              amount:
+                e.target.value,
+            })
+          }
+        />
+      </div>
 
-        <div
-          className="p-4"
-          style={{
-            background: '#fff',
-            borderRadius: '18px',
-            boxShadow: '0 4px 15px rgba(0,0,0,0.08)',
-          }}
+      <div className="col-md-3 mb-2">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Optional note"
+          value={newExpense.note}
+          onChange={e =>
+            setNewExpense({
+              ...newExpense,
+              note: e.target.value,
+            })
+          }
+        />
+      </div>
+
+      <div className="col-md-2 mb-2">
+        <button
+          className="btn btn-danger w-100"
+          onClick={() =>
+            handleAddExpense()
+          }
         >
+          Add
+        </button>
+      </div>
+    </div>
 
-          {/* Filters */}
+    {/* EXPENSE LIST */}
 
-          <div className="mb-4">
+    {filteredExpenses.length >
+    0 ? (
+      <ul className="list-group">
+        {filteredExpenses.map(
+          exp => (
+            <li
+              key={exp.id}
+              className="list-group-item p-3 mb-2 border-0"
+              style={{
+                borderRadius:
+                  '14px',
+                background:
+                  darkMode
+                    ? '#334155'
+                    : '#f8fafc',
+              }}
+            >
+              <div className="d-flex justify-content-between align-items-start flex-wrap">
+                <div>
+                  <h6>
+                    {exp.category}
+                  </h6>
 
-            {[
-              'All',
-              'Yesterday',
-              'Today',
-              'Future',
-              'Custom',
-            ].map(type => (
+                  <small>
+                    {formatDate(
+                      exp.time
+                    )}
+                  </small>
 
-              <button
-                key={type}
-                onClick={() => setExpenseFilter(type)}
-                className={`btn mx-1 mb-2 ${
-                  expenseFilter === type
-                    ? 'btn-dark'
-                    : 'btn-outline-dark'
-                }`}
-              >
-                {type}
-              </button>
-
-            ))}
-
-          </div>
-
-          {/* =============================== */}
-          {/* CUSTOM DATE PICKER */}
-          {/* =============================== */}
-
-          {expenseFilter === 'Custom' && (
-
-            <div className="row mb-4">
-
-              <div className="col-md-4 mb-2">
-
-                <input
-                  type="date"
-                  className="form-control"
-                  value={customStartDate}
-                  onChange={(e) =>
-                    setCustomStartDate(e.target.value)
-                  }
-                />
-
-              </div>
-
-              <div className="col-md-4 mb-2">
-
-                <input
-                  type="date"
-                  className="form-control"
-                  value={customEndDate}
-                  onChange={(e) =>
-                    setCustomEndDate(e.target.value)
-                  }
-                />
-
-              </div>
-
-            </div>
-
-          )}
-
-          {/* =============================== */}
-          {/* Add Expense Form */}
-          {/* =============================== */}
-
-          {(expenseFilter === 'Today' ||
-            expenseFilter === 'Yesterday') && (
-
-            <div className="mb-4">
-
-              <div className="row">
-
-                {/* Category */}
-
-                <div className="col-md-3 mb-2">
-
-                  <select
-                    value={newExpense.category}
-                    onChange={(e) =>
-                      setNewExpense({
-                        ...newExpense,
-                        category: e.target.value,
-                      })
-                    }
-                    className="form-select"
-                  >
-
-                    <option value="">
-                      Select Category
-                    </option>
-
-                    {categoryList.map((cat, idx) => (
-
-                      <option key={idx} value={cat}>
-                        {cat}
-                      </option>
-
-                    ))}
-
-                  </select>
-
+                  {exp.note && (
+                    <div
+                      className="mt-2 px-2 py-1"
+                      style={{
+                        background:
+                          '#dbeafe',
+                        borderRadius:
+                          '8px',
+                        width:
+                          'fit-content',
+                      }}
+                    >
+                      {exp.note}
+                    </div>
+                  )}
                 </div>
 
-                {/* Custom Category */}
-
-                {newExpense.category === 'Custom' && (
-
-                  <div className="col-md-3 mb-2">
+                {editingId ===
+                exp.id ? (
+                  <div className="d-flex flex-column">
+                    <input
+                      type="number"
+                      className="form-control mb-2"
+                      value={
+                        editAmount
+                      }
+                      onChange={e =>
+                        setEditAmount(
+                          e.target
+                            .value
+                        )
+                      }
+                    />
 
                     <input
                       type="text"
-                      placeholder="Custom category"
-                      value={newExpense.customName}
-                      onChange={(e) =>
-                        setNewExpense({
-                          ...newExpense,
-                          customName: e.target.value,
-                        })
+                      className="form-control mb-2"
+                      value={
+                        editNote
                       }
-                      className="form-control"
+                      onChange={e =>
+                        setEditNote(
+                          e.target
+                            .value
+                        )
+                      }
                     />
 
+                    <button
+                      className="btn btn-success btn-sm"
+                      onClick={() =>
+                        handleEditExpense(
+                          exp.id
+                        )
+                      }
+                    >
+                      Save
+                    </button>
                   </div>
+                ) : (
+                  <div className="text-end">
+                    <h5 className="text-danger">
+                      ₹
+                      {exp.amount.toLocaleString(
+                        'en-IN'
+                      )}
+                    </h5>
 
-                )}
-
-                {/* Amount */}
-
-                <div className="col-md-2 mb-2">
-
-                  <input
-                    type="number"
-                    placeholder="Amount"
-                    value={newExpense.amount}
-                    onChange={(e) =>
-                      setNewExpense({
-                        ...newExpense,
-                        amount: e.target.value,
-                      })
-                    }
-                    className="form-control"
-                  />
-
-                </div>
-
-                {/* Note */}
-
-                <div className="col-md-3 mb-2">
-
-                  <input
-                    type="text"
-                    placeholder="Optional note"
-                    value={newExpense.note}
-                    onChange={(e) =>
-                      setNewExpense({
-                        ...newExpense,
-                        note: e.target.value,
-                      })
-                    }
-                    className="form-control"
-                  />
-
-                </div>
-
-                {/* Add Button */}
-
-                <div className="col-md-1 mb-2">
-
-                  <button
-                    onClick={() => {
-
-                      if (
-                        expenseFilter === 'Yesterday'
-                      ) {
-
-                        const yesterday =
-                          new Date();
-
-                        yesterday.setDate(
-                          yesterday.getDate() - 1
+                    <button
+                      className="btn btn-warning btn-sm mx-1"
+                      onClick={() => {
+                        setEditingId(
+                          exp.id
                         );
 
-                        handleAddExpense(yesterday);
+                        setEditAmount(
+                          exp.amount
+                        );
 
-                      } else {
+                        setEditNote(
+                          exp.note ||
+                            ''
+                        );
+                      }}
+                    >
+                      Edit
+                    </button>
 
-                        handleAddExpense();
+                    <button
+                      className="btn btn-danger btn-sm mx-1"
+                      onClick={() =>
+                        handleDeleteExpense(
+                          exp.id
+                        )
                       }
-                    }}
-                    className="btn btn-danger w-100"
-                  >
-                    +
-                  </button>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          )}
-
-          {/* =============================== */}
-          {/* Expense List */}
-          {/* =============================== */}
-
-          {filteredExpenses.length > 0 ? (
-
-            <ul className="list-group">
-
-              {filteredExpenses.map((exp, idx) => (
-
-                <li
-                  key={idx}
-                  className="list-group-item p-3 mb-2 border-0"
-                  style={{
-                    borderRadius: '14px',
-                    background: '#f8fafc',
-                  }}
-                >
-
-                  <div className="d-flex justify-content-between align-items-start flex-wrap">
-
-                    <div>
-
-                      <h6 className="mb-1">
-                        {exp.category}
-                      </h6>
-
-                      <small className="text-muted">
-                        {formatDate(
-                          new Date(exp.time)
-                        )}
-                      </small>
-
-                      {exp.note && (
-
-                        <div
-                          className="mt-2 px-2 py-1"
-                          style={{
-                            background: '#e0f2fe',
-                            borderRadius: '8px',
-                            width: 'fit-content',
-                            fontSize: '13px',
-                          }}
-                        >
-                          {exp.note}
-                        </div>
-
-                      )}
-
-                    </div>
-
-                    {/* =============================== */}
-                    {/* EDIT MODE */}
-                    {/* =============================== */}
-
-                    {editingIndex === idx ? (
-
-                      <div className="d-flex flex-column align-items-end">
-
-                        <input
-                          type="number"
-                          value={editAmount}
-                          onChange={(e) =>
-                            setEditAmount(
-                              e.target.value
-                            )
-                          }
-                          className="form-control mb-2"
-                          style={{ width: '140px' }}
-                        />
-
-                        <input
-                          type="text"
-                          value={editNote}
-                          onChange={(e) =>
-                            setEditNote(
-                              e.target.value
-                            )
-                          }
-                          placeholder="Edit note"
-                          className="form-control mb-2"
-                          style={{ width: '140px' }}
-                        />
-
-                        <button
-                          className="btn btn-success btn-sm"
-                          onClick={() =>
-                            handleEditExpense(exp)
-                          }
-                        >
-                          Save
-                        </button>
-
-                      </div>
-
-                    ) : (
-
-                      <div className="text-end">
-
-                        <h5
-                          style={{
-                            color: '#dc2626',
-                            fontWeight: '700',
-                          }}
-                        >
-                          ₹{exp.amount.toLocaleString('en-IN')}
-                        </h5>
-
-                        <div className="mt-2">
-
-                          <button
-                            className="btn btn-warning btn-sm mx-1"
-                            onClick={() => {
-
-                              setEditingIndex(idx);
-
-                              setEditAmount(
-                                exp.amount
-                              );
-
-                              setEditNote(
-                                exp.note || ''
-                              );
-                            }}
-                          >
-                            Edit
-                          </button>
-
-                          <button
-                            className="btn btn-danger btn-sm mx-1"
-                            onClick={() =>
-                              handleDeleteExpense(exp)
-                            }
-                          >
-                            Delete
-                          </button>
-
-                        </div>
-
-                      </div>
-
-                    )}
-
+                    >
+                      Delete
+                    </button>
                   </div>
+                )}
+              </div>
+            </li>
+          )
+        )}
+      </ul>
+    ) : (
+      <div className="text-center py-5">
+        <h5>No Records Found</h5>
+      </div>
+    )}
+    {/* TOTAL EXPENSES */}
 
-                </li>
+<div className="text-end mt-4">
+  <h4>
+    Total Expenses :
+    <span
+      className="mx-2 text-danger"
+      style={{
+        fontWeight: '700',
+      }}
+    >
+      ₹
+      {filteredExpenses
+        .reduce(
+          (acc, item) =>
+            acc + item.amount,
+          0
+        )
+        .toLocaleString('en-IN')}
+    </span>
+  </h4>
+</div>
+  </div>
+)}
 
-              ))}
 
-            </ul>
+{/* CHART PAGE */}
 
-          ) : (
+{activePage === 'Charts' && (
+  <div
+    className="p-4"
+    style={{
+      background: theme.card,
+      borderRadius: '18px',
+    }}
+  >
+    <h3 className="mb-4">
+      Expense Analytics Dashboard
+    </h3>
 
-            <div className="text-center py-5">
-
-              <h5 className="text-muted">
-                No Records Found
-              </h5>
-
-            </div>
-
-          )}
-
-          {/* =============================== */}
-          {/* TOTAL */}
-          {/* =============================== */}
-
-          <div className="text-end mt-4">
-
-            <h4>
-              Total Expenses :
-              <span
-                style={{
-                  color: '#dc2626',
-                  fontWeight: '700',
-                }}
-                className="mx-2"
-              >
-                ₹{expenseTotal.toLocaleString('en-IN')}
-              </span>
-            </h4>
-
-          </div>
-
-        </div>
-
-      )}
-
-      {/* =============================== */}
-      {/* Savings Page */}
-      {/* =============================== */}
-
-      {activePage === 'Savings' && (
-
-        <div
-          className="p-5 text-center"
-          style={{
-            background: '#fff',
-            borderRadius: '18px',
-            boxShadow: '0 4px 15px rgba(0,0,0,0.08)',
-          }}
+    <div className="mb-4">
+      {[
+        'Today',
+        'Yesterday',
+        'Month',
+        'All',
+      ].map(type => (
+        <button
+          key={type}
+          onClick={() =>
+            setChartFilter(type)
+          }
+          className={`btn mx-1 mb-2 ${
+            chartFilter === type
+              ? 'btn-dark'
+              : 'btn-outline-dark'
+          }`}
         >
+          {type}
+        </button>
+      ))}
+    </div>
+      {/* CHART TOTAL */}
 
-          <h3 className="text-success">
-            Savings Feature Coming Soon...
-          </h3>
-
-        </div>
-
+<div className="text-end mb-4">
+  <h4>
+    Total :
+    <span
+      className="mx-2 text-primary"
+      style={{
+        fontWeight: '700',
+      }}
+    >
+      ₹
+      {chartTotal.toLocaleString(
+        'en-IN'
       )}
-
-      {/* =============================== */}
-      {/* Charts Page */}
-      {/* =============================== */}
-
-      {activePage === 'Charts' && (
-
-        <div
-          className="p-4"
-          style={{
-            background: '#fff',
-            borderRadius: '18px',
-            boxShadow: '0 4px 15px rgba(0,0,0,0.08)',
-          }}
-        >
-
-          <h3 className="mb-4">
-            Expense Analytics Dashboard
-          </h3>
-
-          {/* Chart Filters */}
-
-          <div className="mb-4">
-
-            {[
-              'Today',
-              'Yesterday',
-              'Month',
-              'All',
-            ].map(type => (
-
-              <button
-                key={type}
-                onClick={() => setChartFilter(type)}
-                className={`btn mx-1 mb-2 ${
-                  chartFilter === type
-                    ? 'btn-dark'
-                    : 'btn-outline-dark'
-                }`}
-              >
-                {type}
-              </button>
-
-            ))}
-
-          </div>
-
-          {/* Summary */}
-
-          {chartData.length > 0 ? (
-
-            <ul className="list-group mb-4">
-
-              {chartData.map((item, idx) => (
-
-                <li
-                  key={idx}
-                  className="list-group-item d-flex justify-content-between align-items-center"
-                >
-
-                  <strong>
-                    #{item.id} - {item.name}
-                  </strong>
-
-                  <span
-                    style={{
-                      color: COLORS[idx],
-                      fontWeight: '700',
-                    }}
-                  >
-                    ₹{item.value.toLocaleString('en-IN')}
-                  </span>
-
-                </li>
-
-              ))}
-
-            </ul>
-
-          ) : (
-
-            <p className="text-muted">
-              No Chart Records
-            </p>
-
-          )}
-
-          {/* Total */}
-
-          <div className="text-end mb-4">
-
-            <h4>
-              Total :
-              <span
-                className="mx-2"
-                style={{
-                  color: '#2563eb',
-                  fontWeight: '700',
-                }}
-              >
-                ₹{chartTotal.toLocaleString('en-IN')}
-              </span>
-            </h4>
-
-          </div>
-
-          {/* Pie Chart */}
-
-          <div className="d-flex justify-content-center">
-
-            <PieChart width={700} height={420}>
-
-              <Pie
-                data={chartData}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={140}
-                label
-              >
-
-                {chartData.map((entry, index) => (
-
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={
-                      COLORS[index % COLORS.length]
-                    }
-                  />
-
-                ))}
-
-              </Pie>
-
-              <Tooltip />
-
-              <Legend />
-
-            </PieChart>
-
-          </div>
-
-          {/* =============================== */}
-          {/* OLD CHART CODE - COMMENTED */}
-          {/* =============================== */}
-
-          {/*
-          <PieChart width={600} height={300}>
-            <Pie data={filteredExpenses} dataKey='amount' label>
-              {filteredExpenses.map((entry, index)=>(
+    </span>
+  </h4>
+</div>
+    <div
+      style={{
+        width: '100%',
+        height: '420px',
+      }}
+    >
+      <ResponsiveContainer>
+        <PieChart>
+          <Pie
+            data={chartData}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            outerRadius={140}
+            label={({
+              name,
+              percent,
+            }) =>
+              `${name} ${(
+                percent *
+                100
+              ).toFixed(0)}%`
+            }
+          >
+            {chartData.map(
+              (
+                entry,
+                index
+              ) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={`COLORS${[index]}`}
-                ></Cell>
-              ))}
-            </Pie>
-            <Tooltip></Tooltip>
-          </PieChart>
-          */}
+                  fill={
+                    COLORS[
+                      index %
+                        COLORS.length
+                    ]
+                  }
+                />
+              )
+            )}
+          </Pie>
 
-        </div>
+          <Tooltip />
 
-      )}
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
+  </div>
+)}
 
+{/* SAVINGS PAGE */}
+
+{activePage === 'Savings' && (
+  <div
+    className="p-5 text-center"
+    style={{
+      background: theme.card,
+      borderRadius: '18px',
+    }}
+  >
+    <h3 className="text-success">
+      Savings Overview
+    </h3>
+
+    <hr />
+
+    <h5 className="mb-3">
+      Monthly Salary :
+      <span className="mx-2 text-primary">
+        ₹
+        {salary.toLocaleString(
+          'en-IN'
+        )}
+      </span>
+    </h5>
+
+    <h5 className="mb-3">
+      Total Expenses :
+      <span className="mx-2 text-danger">
+        ₹
+        {totalExpenses.toLocaleString(
+          'en-IN'
+        )}
+      </span>
+    </h5>
+
+    <h5 className="mb-3">
+      Current Savings :
+      <span className="mx-2 text-success">
+        ₹
+        {balance.toLocaleString(
+          'en-IN'
+        )}
+      </span>
+    </h5>
+
+    <h5>
+      Savings Rate :
+      <span className="mx-2 text-warning">
+        {savingsPercentage}%
+      </span>
+    </h5>
+  </div>
+)}
     </div>
   );
 }
+
+
+
